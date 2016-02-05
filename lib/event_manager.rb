@@ -51,16 +51,16 @@ def day_of(regdate)
 	end
 end
 
-def peak_hours(reg_hours)
-	hour_counts = {}
-	reg_hours.each do |hour|
-		if hour_counts.include?(hour)
-			hour_counts[hour] += 1
+def peak_times(array)
+	time_counts = {}
+	array.each do |time|
+		if time_counts.include?(time)
+			time_counts[time] += 1
 		else
-			hour_counts[hour] = 1
+			time_counts[time] = 1
 		end
 	end
-	hour_counts
+	time_counts
 end
 
 def legislators_by_zipcode(zipcode)
@@ -108,5 +108,5 @@ contents.each do |row|
 	reg_days << reg_day
 end
 
-puts peak_hours(reg_hours)
-puts peak_hours(reg_days)
+puts peak_times(reg_hours)
+puts peak_times(reg_days)
