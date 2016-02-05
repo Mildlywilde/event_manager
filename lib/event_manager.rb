@@ -31,8 +31,27 @@ def hour_of(regdate)
 	rubytime.hour
 end
 
+def day_of(regdate)
+	rubytime = DateTime.strptime(regdate.to_s, "%m/%d/%y %H:%M" )
+	case rubytime.wday
+	when 0
+		return "Sun"
+	when 1
+		return "Mon"
+	when 2
+		return "Tue"
+	when 3
+		return "Wed"
+	when 4
+		return "Thu"
+	when 5
+		return "Fri"
+	when 6
+		return "Sat"
+	end
+end
+
 def peak_hours(reg_hours)
-	reg_hours.sort!
 	hour_counts = {}
 	reg_hours.each do |hour|
 		if hour_counts.include?(hour)
@@ -60,7 +79,8 @@ end
 
 puts "EventManager Intialized!"
 
-reg_hours =[]
+reg_hours = []
+reg_days = []
 
 contents = CSV.open "event_attendees.csv", headers: true, header_converters: :symbol
 contents.each do |row|
@@ -70,6 +90,8 @@ contents.each do |row|
 	phone_number = clean_number(row[:homephone])
 
 	reg_hour = hour_of(row[:regdate])
+
+	reg_day = day_of(row[:regdate])
 
 	zipcode = clean_zipcode(row[:zipcode])
 
@@ -82,6 +104,9 @@ contents.each do |row|
 	puts phone_number
 	
 	reg_hours << reg_hour
+
+	reg_days << reg_day
 end
 
 puts peak_hours(reg_hours)
+puts peak_hours(reg_days)
