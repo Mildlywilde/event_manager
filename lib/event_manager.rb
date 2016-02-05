@@ -26,6 +26,23 @@ def clean_number(phone_number)
 	return number
 end
 
+def hour_of(regdate)
+	rubytime = DateTime.strptime(regdate.to_s, "%m/%d/%y %H:%M" )
+	rubytime.hour
+end
+
+def peak_hours(reg_hours)
+	reg_hours.sort!
+	hour_counts = {}
+	reg_hours.each do |hour|
+		if hour_counts.include?(hour)
+			hour_counts[hour] += 1
+		else
+			hour_counts[hour] = 1
+		end
+	end
+	hour_counts
+end
 
 def legislators_by_zipcode(zipcode)
 	legislators = Sunlight::Congress::Legislator.by_zipcode(zipcode)
@@ -43,12 +60,16 @@ end
 
 puts "EventManager Intialized!"
 
+reg_hours =[]
+
 contents = CSV.open "event_attendees.csv", headers: true, header_converters: :symbol
 contents.each do |row|
 	id = row[0]
 	name = row[:first_name]
 
 	phone_number = clean_number(row[:homephone])
+
+	reg_hour = hour_of(row[:regdate])
 
 	zipcode = clean_zipcode(row[:zipcode])
 
@@ -60,5 +81,7 @@ contents.each do |row|
 
 	puts phone_number
 	
-	
+	reg_hours << reg_hour
 end
+
+puts peak_hours(reg_hours)
